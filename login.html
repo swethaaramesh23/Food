@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sign in to your Stackly account. Access your profile, track active deliveries, and manage orders.">
+    <title>Stackly | Login to Your Account</title>
+    
+    <!-- CSS Stylesheets -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader">
+            <div class="loader-circle"></div>
+            <div class="loader-circle"></div>
+            <div class="loader-circle"></div>
+            <div class="loader-shadow"></div>
+            <div class="loader-shadow"></div>
+            <div class="loader-shadow"></div>
+        </div>
+    </div>
+
+    <!-- Back to home icon -->
+    <a href="index.html" style="position: fixed; top: 30px; left: 30px; font-weight: 700; color: #1A1A1A; z-index: 10; display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.9); padding: 10px 18px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+        <i class="fa-solid fa-arrow-left"></i> Back To Home
+    </a>
+
+    <!-- Auth Background Shapes -->
+    <div class="auth-wrapper">
+        <div class="auth-shape auth-shape-1"></div>
+        <div class="auth-shape auth-shape-2"></div>
+
+        <div class="auth-container">
+            <div class="auth-card">
+                <!-- Logo Image -->
+                <a href="index.html" class="auth-logo">
+                    <img src="logo.webp" alt="Stackly Logo" class="auth-logo-img">
+                </a>
+                <p class="auth-tagline">Satisfying your cravings since 2011</p>
+
+                <h2 class="auth-title">Welcome Back!</h2>
+
+                <!-- Main Login Form -->
+                <form id="login-form">
+                    <div class="auth-input-group">
+                        <input type="email" class="auth-input" id="login-email" placeholder="Email Address" required autocomplete="email">
+                        <i class="fa-regular fa-envelope"></i>
+                    </div>
+                    
+                    <div class="auth-input-group" style="margin-bottom: 16px;">
+                        <input type="password" class="auth-input" id="login-password" placeholder="Password" required autocomplete="current-password">
+                        <i class="fa-solid fa-lock"></i>
+                        <button type="button" id="toggle-password" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #999999;" aria-label="Toggle Password Visibility">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+
+                    <!-- Role Dropdown -->
+                    <div class="auth-input-group" style="margin-bottom: 16px;">
+                        <select class="auth-input auth-select" id="login-role" required>
+                            <option value="" disabled selected>Select Your Role</option>
+                            <option value="Customer">🛒 Customer</option>
+                            <option value="Admin">🛡️ Admin</option>
+                            <option value="Staff">📋 Staff / Kitchen</option>
+                            <option value="Delivery Partner">🏍️ Delivery Partner</option>
+                        </select>
+                        <i class="fa-solid fa-user-tag"></i>
+                    </div>
+
+                    <div class="auth-helper-row">
+                        <label class="auth-checkbox-label">
+                            <input type="checkbox" id="login-remember"> Remember Me
+                        </label>
+                        <a href="404.html" class="forgot-link">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="auth-btn" id="login-btn">
+                        Sign In <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                    </button>
+                </form>
+
+                <div class="auth-divider">Or Sign In With</div>
+
+                <!-- Social Logins -->
+                <div class="social-login-grid">
+                    <a href="404.html" class="social-login-btn google" id="btn-google-login" aria-label="Sign in with Google">
+                        <i class="fa-brands fa-google"></i>
+                    </a>
+                    <a href="404.html" class="social-login-btn facebook" id="btn-facebook-login" aria-label="Sign in with Facebook">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+                    <a href="404.html" class="social-login-btn apple" id="btn-apple-login" aria-label="Sign in with Apple">
+                        <i class="fa-brands fa-apple"></i>
+                    </a>
+                </div>
+
+                <p class="auth-switch-prompt">
+                    New to Stackly? <a href="signup.html">Create an account</a>
+                </p>
+            </div>
+
+            <!-- Dashboard Testing Cheat Sheet -->
+            <div class="glass-card" style="margin-top: 24px; padding: 20px; font-size: 0.85rem; border-radius: 16px; border: 1px dashed var(--primary); background: rgba(255, 255, 255, 0.9);">
+                <h4 style="color: var(--primary); margin-bottom: 8px; font-size: 0.95rem; text-align: left;"><i class="fa-solid fa-flask"></i> Testing Dashboards</h4>
+                <p style="color: var(--text-muted); margin-bottom: 8px; text-align: left;">Select a role above and use <strong>any password</strong> to test different dashboards:</p>
+                <ul style="text-align: left; display: grid; gap: 4px; color: var(--text-main); font-weight: 500;">
+                    <li><i class="fa-solid fa-user-shield" style="color: #007AFF; width: 18px;"></i> <strong>Admin:</strong> Full analytics &amp; management</li>
+                    <li><i class="fa-solid fa-receipt" style="color: #FFB800; width: 18px;"></i> <strong>Staff:</strong> Orders &amp; kitchen management</li>
+                    <li><i class="fa-solid fa-motorcycle" style="color: #AF52DE; width: 18px;"></i> <strong>Delivery Partner:</strong> Active deliveries</li>
+                    <li><i class="fa-solid fa-circle-user" style="color: #4CD964; width: 18px;"></i> <strong>Customer:</strong> Profile &amp; order history</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Scripts -->
+    <script src="js/auth.js"></script>
+</body>
+</html>
+

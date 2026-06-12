@@ -1755,13 +1755,13 @@ textarea.form-input {
 .footer {
     background-color: #FFFFFF;
     color: var(--text-muted);
-    padding: 140px 0 30px;
+    padding: 140px 0 100px; /* Added bottom padding to prevent scroll-to-top overlap */
     border-top: 1px solid rgba(0,0,0,0.05);
 }
 
 .footer-grid {
     display: grid;
-    grid-template-columns: 1.8fr 1fr 1fr 1.2fr;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr; /* 4 columns for desktop */
     gap: 40px;
     margin-bottom: 60px;
     align-items: start;
@@ -1780,6 +1780,9 @@ textarea.form-input {
 .footer-desc {
     margin-bottom: 24px;
     font-size: 0.95rem;
+    line-height: 1.6;
+    max-width: 100%;
+    word-wrap: break-word;
 }
 
 .footer-socials {
@@ -1803,6 +1806,7 @@ textarea.form-input {
 
 .social-icon:hover {
     background-color: var(--primary);
+    color: var(--white);
     transform: translateY(-3px);
 }
 
@@ -1860,6 +1864,7 @@ textarea.form-input {
     display: flex;
     gap: 16px;
     margin-bottom: 16px;
+    align-items: flex-start;
 }
 
 .footer-contact-item i {
@@ -1870,6 +1875,7 @@ textarea.form-input {
 
 .footer-contact-item p {
     font-size: 0.95rem;
+    word-wrap: break-word;
 }
 
 .footer-bottom {
@@ -1886,14 +1892,48 @@ textarea.form-input {
 .footer-bottom-links {
     display: flex;
     gap: 24px;
+    flex-wrap: wrap;
 }
 
 .footer-bottom-links a {
     color: var(--text-muted);
+    transition: var(--transition-fast);
 }
 
 .footer-bottom-links a:hover {
     color: var(--primary);
+}
+
+/* Footer Responsive Layouts */
+@media (max-width: 1199px) {
+    .footer-grid {
+        grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
+    }
+}
+
+@media (max-width: 991px) {
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
+        gap: 50px 40px;
+    }
+}
+
+@media (max-width: 767px) {
+    .footer {
+        padding: 100px 0 140px; /* Larger bottom padding for mobile scroll-to-top */
+    }
+    .footer-grid {
+        grid-template-columns: 1fr; /* Single column for mobile */
+        gap: 40px;
+    }
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+    .footer-bottom-links {
+        justify-content: center;
+    }
 }
 
 /* ==========================================================================
@@ -1959,9 +1999,6 @@ textarea.form-input {
 @media (max-width: 991px) {
     .container {
         max-width: 720px;
-    }
-    .footer-grid {
-        grid-template-columns: 1fr 1fr;
     }
     .hero-grid {
         grid-template-columns: 1fr;
@@ -2060,38 +2097,6 @@ textarea.form-input {
     .contact-cards {
         grid-template-columns: 1fr;
     }
-    .footer {
-        padding: 60px 0 100px;
-    }
-    .footer-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
-        text-align: center;
-    }
-    .footer-col {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .footer-socials {
-        justify-content: center;
-    }
-    .footer-col h4::after {
-        left: 50%;
-        transform: translateX(-50%);
-    }
-    .footer-contact-item {
-        justify-content: center;
-    }
-    .footer-bottom {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
-    }
-    .footer-bottom-links {
-        justify-content: center;
-    }
     #scroll-to-top {
         bottom: 80px;
         width: 40px;
@@ -2113,9 +2118,6 @@ textarea.form-input {
 @media (max-width: 480px) {
     .container {
         padding: 0 16px;
-    }
-    .footer {
-        padding: 60px 0 100px;
     }
     .hero-title {
         font-size: 2rem;
@@ -2142,10 +2144,6 @@ textarea.form-input {
     .newsletter-form .btn-secondary {
         border-radius: var(--border-radius-round);
         width: 100%;
-    }
-    .footer-bottom {
-        flex-direction: column;
-        text-align: center;
     }
 }
 

@@ -209,6 +209,7 @@ body.dashboard-body {
 /* Main Content Area */
 .dashboard-main {
     flex: 1;
+    min-width: 0; /* Prevents flex children from causing horizontal scroll */
     margin-left: var(--sidebar-width);
     padding: 30px;
     min-height: 100vh;
@@ -304,6 +305,7 @@ body.dashboard-body.sidebar-collapsed .dashboard-main {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: 100%; /* Ensure equal heights */
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     transition: transform 0.3s;
 }
@@ -372,7 +374,10 @@ body.dashboard-body.sidebar-collapsed .dashboard-main {
     border: 1px solid rgba(0,0,0,0.06);
     border-radius: 16px;
     padding: 24px;
+    height: 100%; /* Ensure equal heights */
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    display: flex;
+    flex-direction: column;
 }
 
 .chart-header {
@@ -390,6 +395,7 @@ body.dashboard-body.sidebar-collapsed .dashboard-main {
 .chart-content {
     position: relative;
     width: 100%;
+    flex: 1; /* Take up remaining space */
 }
 
 .chart-content.bar-line {
@@ -430,6 +436,7 @@ body.dashboard-body.sidebar-collapsed .dashboard-main {
 .table-responsive {
     width: 100%;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .data-table {
@@ -836,7 +843,8 @@ body.dashboard-body.sidebar-collapsed .dashboard-main {
 }
 
 .delivery-map-card {
-    height: 480px;
+    min-height: 480px;
+    height: 100%; /* Equal heights with right column */
     position: relative;
     overflow: hidden;
 }
@@ -1110,5 +1118,40 @@ body.dashboard-body.sidebar-collapsed .dashboard-main {
     .dashboard-logo-center img {
         height: 42px !important;
     }
-}
 
+    /* Responsive Card Tables */
+    .data-table thead {
+        display: none;
+    }
+    .data-table tbody tr {
+        display: block;
+        margin-bottom: 16px;
+        border: 1px solid rgba(0,0,0,0.06);
+        border-radius: 12px;
+        padding: 12px;
+        background-color: #FFFFFF;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .data-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px dashed rgba(0,0,0,0.05);
+        font-size: 0.9rem;
+    }
+    .data-table tbody td:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+    .data-table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #666666;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+    }
+    .table-actions {
+        justify-content: flex-end;
+    }
+}

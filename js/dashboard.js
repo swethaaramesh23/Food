@@ -220,6 +220,47 @@ document.addEventListener("DOMContentLoaded", () => {
     const ordersListRows = document.getElementById("orders-dashboard-rows");
     const tabButtons = document.querySelectorAll(".order-tab");
     
+    let currentPage = 1;
+    let itemsPerPage = 5;
+    let searchQuery = "";
+    let sortQuery = "newest";
+    let activeFilter = "all";
+
+    const searchInput = document.getElementById("order-search");
+    if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+            searchQuery = e.target.value.toLowerCase();
+            currentPage = 1;
+            renderOrdersDashboard(activeFilter);
+        });
+    }
+
+    const sortSelect = document.getElementById("order-sort");
+    if (sortSelect) {
+        sortSelect.addEventListener("change", (e) => {
+            sortQuery = e.target.value;
+            renderOrdersDashboard(activeFilter);
+        });
+    }
+
+    const btnPrev = document.getElementById("btn-prev-page");
+    const btnNext = document.getElementById("btn-next-page");
+
+    if (btnPrev) {
+        btnPrev.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderOrdersDashboard(activeFilter);
+            }
+        });
+    }
+    if (btnNext) {
+        btnNext.addEventListener("click", () => {
+            currentPage++;
+            renderOrdersDashboard(activeFilter);
+        });
+    }
+    
     function updateTabsCount() {
         if (!document.getElementById("count-all")) return;
         
@@ -238,48 +279,89 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderOrdersDashboard(filter = "all") {
         if (!ordersListRows) return;
-        
+        activeFilter = filter;
         ordersListRows.innerHTML = "";
         
-        const filtered = orders.filter(o => {
-            if (filter === "all") return true;
-            return o.status === filter;
+        let filtered = orders.filter(o => {
+            if (filter !== "all" && o.status !== filter) return false;
+            if (searchQuery) {
+                return o.id.toLowerCase().includes(searchQuery) || 
+                       o.customer.toLowerCase().includes(searchQuery) ||
+                       o.items.toLowerCase().includes(searchQuery);
+            }
+            return true;
         });
+
+        filtered.sort((a, b) => {
+            const timeA = new Date(a.time).getTime();
+            const timeB = new Date(b.time).getTime();
+            if (sortQuery === "newest") return timeB - timeA;
+            if (sortQuery === "oldest") return timeA - timeB;
+            if (sortQuery === "highest") return b.price - a.price;
+            if (sortQuery === "lowest") return a.price - b.price;
+            return 0;
+        });
+
+        const totalItems = filtered.length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+        const paginated = filtered.slice(startIndex, endIndex);
+
+        const pageInfo = document.getElementById("page-info");
+        if (pageInfo) {
+            pageInfo.innerText = totalItems > 0 ? `Showing ${startIndex + 1}-${endIndex} of ${totalItems} orders` : `No orders`;
+        }
+        if (btnPrev) btnPrev.disabled = currentPage === 1;
+        if (btnNext) btnNext.disabled = currentPage === totalPages;
+        if (btnPrev) btnPrev.style.opacity = currentPage === 1 ? "0.5" : "1";
+        if (btnNext) btnNext.style.opacity = currentPage === totalPages ? "0.5" : "1";
         
-        if (filtered.length === 0) {
+        if (paginated.length === 0) {
             ordersListRows.innerHTML = `
                 <tr>
                     <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 40px;">
                         <i class="fa-regular fa-folder-open" style="font-size: 2rem; opacity: 0.5; margin-bottom: 8px;"></i>
-                        <p>No orders found under this category.</p>
+                        <p>No orders found under this criteria.</p>
                     </td>
                 </tr>
             `;
             return;
         }
         
-        filtered.forEach(o => {
-            let actionBtnHTML = "";
+        paginated.forEach(o => {
+            let actionBtnHTML = `<button class="btn btn-action-view" data-id="${o.id}" style="padding: 6px 10px; font-size: 0.8rem; background: #fff; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; margin-right: 4px;" title="View Order"><i class="fa-solid fa-eye"></i></button>`;
+            
             if (o.status === "pending") {
-                actionBtnHTML = `<button class="btn btn-primary btn-action-state" data-id="${o.id}" data-target-state="preparing" style="padding: 6px 12px; font-size: 0.8rem;"><i class="fa-solid fa-fire"></i> Cook</button>`;
+                actionBtnHTML += `<button class="btn btn-primary btn-action-state" data-id="${o.id}" data-target-state="preparing" style="padding: 6px 10px; font-size: 0.8rem; margin-right: 4px; background:#4CD964; border-color:#4CD964;" title="Accept Order"><i class="fa-solid fa-check"></i> Accept</button>`;
+                actionBtnHTML += `<button class="btn btn-primary btn-action-state" data-id="${o.id}" data-target-state="cancelled" style="padding: 6px 10px; font-size: 0.8rem; margin-right: 4px; background:#FF3B30; border-color:#FF3B30;" title="Reject Order"><i class="fa-solid fa-xmark"></i> Reject</button>`;
             } else if (o.status === "preparing") {
-                actionBtnHTML = `<button class="btn btn-secondary btn-action-state" data-id="${o.id}" data-target-state="delivery" style="padding: 6px 12px; font-size: 0.8rem; background-color:#AF52DE;"><i class="fa-solid fa-truck-fast"></i> Dispatch</button>`;
+                actionBtnHTML += `<button class="btn btn-primary btn-action-state" data-id="${o.id}" data-target-state="delivery" style="padding: 6px 10px; font-size: 0.8rem; margin-right: 4px; background:#007AFF; border-color:#007AFF;" title="Pick Up Order"><i class="fa-solid fa-truck-fast"></i> Pick Up</button>`;
             } else if (o.status === "delivery") {
-                actionBtnHTML = `<button class="btn btn-primary btn-action-state" data-id="${o.id}" data-target-state="delivered" style="padding: 6px 12px; font-size: 0.8rem; background-color:#4CD964; border-color:#4CD964;"><i class="fa-solid fa-circle-check"></i> Complete</button>`;
-            } else {
-                actionBtnHTML = `<span style="color:var(--text-muted); font-size:0.8rem; font-weight:600;"><i class="fa-solid fa-circle-check" style="color:#4CD964;"></i> Archived</span>`;
+                actionBtnHTML += `<button class="btn btn-primary btn-action-state" data-id="${o.id}" data-target-state="delivered" style="padding: 6px 10px; font-size: 0.8rem; margin-right: 4px; background:#AF52DE; border-color:#AF52DE;" title="Delivered Order"><i class="fa-solid fa-house-chimney"></i> Delivered</button>`;
             }
+
+            if (o.status !== "cancelled" && o.status !== "delivered") {
+                actionBtnHTML += `<button class="btn btn-primary btn-action-state" data-id="${o.id}" data-target-state="cancelled" style="padding: 6px 10px; font-size: 0.8rem; margin-right: 4px; background:#FF3B30; border-color:#FF3B30;" title="Cancel Order"><i class="fa-solid fa-ban"></i></button>`;
+            }
+            actionBtnHTML += `<button class="btn btn-action-delete" data-id="${o.id}" style="padding: 6px 10px; font-size: 0.8rem; background: #fff; color: #FF3B30; border: 1px solid #FF3B30; border-radius: 6px; cursor: pointer;" title="Delete Order"><i class="fa-solid fa-trash"></i></button>`;
             
             const tr = document.createElement("tr");
             tr.innerHTML = `
-                <td><strong>${o.id}</strong></td>
-                <td>${o.customer}</td>
-                <td>${o.items}</td>
-                <td>${o.address}</td>
-                <td style="font-weight:700; color:var(--primary);">$${o.price.toFixed(2)}</td>
-                <td><span class="status-pill ${o.status}">${o.status}</span></td>
-                <td>${o.time}</td>
-                <td>${actionBtnHTML}</td>
+                <td data-label="Order ID"><strong>${o.id}</strong></td>
+                <td data-label="Customer Info">${o.customer}</td>
+                <td data-label="Ordered Dishes" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${o.items}</td>
+                <td data-label="Address Location">${o.address}</td>
+                <td data-label="Total Price" style="font-weight:700; color:var(--primary);">$${o.price.toFixed(2)}</td>
+                <td data-label="State"><span class="status-pill ${o.status}">${o.status}</span></td>
+                <td data-label="Time Placed">${o.time}</td>
+                <td data-label="Actions">
+                    <div class="table-actions" style="display:flex; gap:4px; flex-wrap:wrap;">
+                        ${actionBtnHTML}
+                    </div>
+                </td>
             `;
             ordersListRows.appendChild(tr);
         });
@@ -294,11 +376,30 @@ document.addEventListener("DOMContentLoaded", () => {
                     targetOrder.status = targetState;
                     saveOrders();
                     showNotificationToast(`Order ${id} shifted to ${targetState}!`, "success");
-                    
-                    const activeFilter = document.querySelector(".order-tab.active").getAttribute("data-filter");
                     renderOrdersDashboard(activeFilter);
                     updateTabsCount();
                 }
+            });
+        });
+
+        document.querySelectorAll(".btn-action-delete").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const id = btn.getAttribute("data-id");
+                if(confirm(`Are you sure you want to permanently delete order ${id}?`)) {
+                    orders = orders.filter(x => x.id !== id);
+                    saveOrders();
+                    showNotificationToast(`Order ${id} deleted successfully.`, "success");
+                    renderOrdersDashboard(activeFilter);
+                    updateTabsCount();
+                }
+            });
+        });
+
+        document.querySelectorAll(".btn-action-view").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const id = btn.getAttribute("data-id");
+                const o = orders.find(x => x.id === id);
+                alert(`Viewing Order Details:\n\nID: ${o.id}\nCustomer: ${o.customer}\nItems: ${o.items}\nPrice: $${o.price.toFixed(2)}\nStatus: ${o.status}\nTime: ${o.time}`);
             });
         });
     }
@@ -309,6 +410,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.classList.add("active");
             
             const filter = btn.getAttribute("data-filter");
+            currentPage = 1; // reset page on tab switch
             renderOrdersDashboard(filter);
         });
     });

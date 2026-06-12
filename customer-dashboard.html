@@ -15,6 +15,25 @@
 </head>
 <body class="dashboard-body">
 
+    <!-- Preloader Animation (Strict 2.5s delay inside dashboard.js) -->
+    <div id="preloader">
+        <div class="loader-content">
+            <div style="display:flex; gap:18px; justify-content:center; align-items:center; margin-bottom:18px; font-size:2.4rem;">
+                <i class="fa-solid fa-utensils" style="color:#FF6B35; animation: preloaderBounce 1.2s ease-in-out infinite;"></i>
+                <i class="fa-solid fa-truck-fast" style="color:#1A1A1A; animation: preloaderBounce 1.2s ease-in-out 0.2s infinite;"></i>
+                <i class="fa-solid fa-heart" style="color:#FF3B30; animation: preloaderBounce 1.2s ease-in-out 0.4s infinite;"></i>
+            </div>
+            <p style="font-family:'Outfit',sans-serif; font-size:1.1rem; font-weight:700; color:#1A1A1A; letter-spacing:0.5px; margin-bottom:20px;">Loading Dashboard...</p>
+            <div class="loader-spinner"></div>
+        </div>
+    </div>
+    <style>
+        @keyframes preloaderBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+    </style>
+
     <!-- Collapsible Sidebar Navigation -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -128,6 +147,33 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Payment Methods -->
+                <div class="table-card" style="margin-bottom: 0;">
+                    <div class="table-header">
+                        <h3 class="table-title">Payment Methods</h3>
+                    </div>
+                    <div class="address-list">
+                        <!-- Card 1 -->
+                        <div class="address-item primary">
+                            <div class="address-icon"><i class="fa-brands fa-cc-visa"></i></div>
+                            <div class="address-info">
+                                <div class="address-label">Visa ending in 4242 (Default)</div>
+                                <div class="address-details">Expires 12/28</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Card 2 -->
+                        <div class="address-item">
+                            <div class="address-icon"><i class="fa-brands fa-cc-mastercard"></i></div>
+                            <div class="address-info">
+                                <div class="address-label">Mastercard ending in 8899</div>
+                                <div class="address-details">Expires 08/27</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline" style="width: 100%; margin-top: 15px; padding: 10px; border: 1px dashed rgba(0,0,0,0.2); border-radius: 8px; background: transparent; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; font-weight: 600; color: var(--text-color); transition: all 0.3s;"><i class="fa-solid fa-plus"></i> Add New Payment Method</button>
+                </div>
             </div>
 
             <!-- Right Side: Order Timeline history & Favorites list -->
@@ -193,6 +239,31 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Profile Settings -->
+                <div class="table-card" style="margin-bottom: 0;">
+                    <div class="table-header">
+                        <h3 class="table-title">Profile Settings</h3>
+                    </div>
+                    <form style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px;">
+                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                            <label style="font-size: 0.9rem; font-weight: 600; color: var(--text-color);">Full Name</label>
+                            <input type="text" value="Jane Doe" style="padding: 10px 15px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; font-family: 'Outfit', sans-serif; background: rgba(255,255,255,0.5);">
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                            <label style="font-size: 0.9rem; font-weight: 600; color: var(--text-color);">Email Address</label>
+                            <input type="email" value="jane.doe@example.com" style="padding: 10px 15px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; font-family: 'Outfit', sans-serif; background: rgba(255,255,255,0.5);">
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                            <label style="font-size: 0.9rem; font-weight: 600; color: var(--text-color);">Phone Number</label>
+                            <input type="tel" value="+1 (555) 123-4567" style="padding: 10px 15px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; font-family: 'Outfit', sans-serif; background: rgba(255,255,255,0.5);">
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 5px;">
+                            <button type="button" class="btn btn-primary" style="flex: 1; padding: 10px; border-radius: 8px;"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+                            <button type="button" class="btn btn-secondary" style="flex: 1; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.05); color: var(--text-color); border: 1px solid transparent;"><i class="fa-solid fa-key"></i> Password</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

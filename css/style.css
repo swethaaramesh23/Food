@@ -676,6 +676,7 @@ button {
 .hero {
     min-height: 100vh;
     padding-top: calc(var(--header-height) + 80px);
+    padding-bottom: 80px;
     display: flex;
     align-items: center;
     background: radial-gradient(circle at 80% 25%, rgba(255, 107, 53, 0.07) 0%, transparent 60%);
@@ -689,7 +690,11 @@ button {
     align-items: center;
     gap: 40px;
     position: relative;
-    z-index: 5;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
 }
 
 .hero-tagline {
